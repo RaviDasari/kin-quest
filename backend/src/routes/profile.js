@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const { ensureAuthenticated } = require('../middleware/auth');
+const { isValidZipCode, isValidGender, isValidDOB } = require('../utils/validation');
 
 // Get user profile
 router.get('/', ensureAuthenticated, async (req, res) => {
@@ -30,7 +31,7 @@ router.post('/', ensureAuthenticated, async (req, res) => {
     const { zipCode, familyMembers } = req.body;
 
     // Validate ZIP code
-    if (!zipCode || !/^\d{5}$/.test(zipCode)) {
+    if (!zipCode || !isValidZipCode(zipCode)) {
       return res.status(400).json({ error: 'Invalid ZIP code - must be 5 digits' });
     }
 
@@ -48,15 +49,14 @@ router.post('/', ensureAuthenticated, async (req, res) => {
       }
 
       // Validate date of birth
-      const dob = new Date(member.dob);
-      if (isNaN(dob.getTime())) {
+      if (!isValidDOB(member.dob)) {
         return res.status(400).json({ 
           error: `Invalid date of birth for ${member.name}` 
         });
       }
 
       // Validate gender if provided
-      if (member.gender && !['M', 'F', 'Other', 'Prefer not to say'].includes(member.gender)) {
+      if (!isValidGender(member.gender)) {
         return res.status(400).json({ 
           error: 'Invalid gender value' 
         });
@@ -94,7 +94,7 @@ router.put('/', ensureAuthenticated, async (req, res) => {
     const updateData = {};
     
     if (zipCode) {
-      if (!/^\d{5}$/.test(zipCode)) {
+      if (!isValidZipCode(zipCode)) {
         return res.status(400).json({ error: 'Invalid ZIP code - must be 5 digits' });
       }
       updateData.zipCode = zipCode;

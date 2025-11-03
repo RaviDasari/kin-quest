@@ -102,7 +102,7 @@ class LLMService {
       } catch (parseError) {
         console.error('Error parsing LLM response:', parseError);
         // Fallback to date sorting
-        rankedIds = events.map((_, idx) => idx).slice(0, 10);
+        rankedIds = Array.from({length: Math.min(events.length, 10)}, (_, i) => i);
       }
 
       // Map IDs back to events and add reasoning

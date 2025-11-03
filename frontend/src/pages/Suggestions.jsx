@@ -98,7 +98,7 @@ const Suggestions = () => {
       }}>
         {events.map((event, index) => (
           <EventCard 
-            key={index} 
+            key={`${event.title}-${event.date}-${index}`}
             event={event} 
             onClick={() => handleEventClick(event)}
           />

@@ -72,7 +72,7 @@ class ScraperService {
         const ageHints = $(elem).find('.age-info').text().trim();
 
         const eventDate = new Date(dateStr);
-        if (eventDate <= endDate) {
+        if (eventDate >= new Date() && eventDate <= endDate) {
           events.push({
             title,
             date: eventDate,
