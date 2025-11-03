@@ -2,6 +2,8 @@
 
 App that gives you personalized list of upcoming events near by you so you don't miss them.
 
+> **📋 Quick Links**: [Implementation Summary](IMPLEMENTATION.md) | [Security Documentation](SECURITY.md) | [Requirements & Architecture](Requirements%20and%20Architecture.md)
+
 ## Overview
 
 KinQuest is a full-stack web application that helps families discover personalized, family-friendly local events based on their ZIP code. Using AI-powered filtering, the app provides tailored event recommendations that match your family's demographics and interests.
