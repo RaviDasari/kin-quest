@@ -5,9 +5,10 @@ const ScraperService = require('../services/ScraperService');
 const CacheService = require('../services/CacheService');
 const LLMService = require('../services/LLMService');
 const { ensureAuthenticated, ensureProfileCompleted } = require('../middleware/auth');
+const { suggestionsLimiter, scrapeLimiter } = require('../middleware/rateLimiter');
 
 // Get personalized event suggestions
-router.post('/', ensureAuthenticated, ensureProfileCompleted, async (req, res) => {
+router.post('/', ensureAuthenticated, ensureProfileCompleted, suggestionsLimiter, async (req, res) => {
   try {
     const userId = req.user._id;
     
@@ -69,7 +70,7 @@ router.post('/', ensureAuthenticated, ensureProfileCompleted, async (req, res) =
 });
 
 // Force refresh cache for current user's ZIP
-router.post('/refresh', ensureAuthenticated, ensureProfileCompleted, async (req, res) => {
+router.post('/refresh', ensureAuthenticated, ensureProfileCompleted, scrapeLimiter, async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     const { zipCode } = user;

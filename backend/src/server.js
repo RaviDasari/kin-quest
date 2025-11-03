@@ -5,6 +5,7 @@ const cors = require('cors');
 const connectDB = require('./config/database');
 const passport = require('./config/passport');
 const LLMService = require('./services/LLMService');
+const { apiLimiter } = require('./middleware/rateLimiter');
 
 // Import routes
 const authRoutes = require('./routes/auth');
@@ -24,6 +25,9 @@ app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:3000',
   credentials: true,
 }));
+
+// Apply general rate limiter to all routes
+app.use(apiLimiter);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

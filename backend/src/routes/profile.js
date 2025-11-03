@@ -3,9 +3,10 @@ const router = express.Router();
 const User = require('../models/User');
 const { ensureAuthenticated } = require('../middleware/auth');
 const { isValidZipCode, isValidGender, isValidDOB } = require('../utils/validation');
+const { profileLimiter } = require('../middleware/rateLimiter');
 
 // Get user profile
-router.get('/', ensureAuthenticated, async (req, res) => {
+router.get('/', ensureAuthenticated, profileLimiter, async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     if (!user) {
@@ -26,7 +27,7 @@ router.get('/', ensureAuthenticated, async (req, res) => {
 });
 
 // Create/Update user profile
-router.post('/', ensureAuthenticated, async (req, res) => {
+router.post('/', ensureAuthenticated, profileLimiter, async (req, res) => {
   try {
     const { zipCode, familyMembers } = req.body;
 
@@ -87,7 +88,7 @@ router.post('/', ensureAuthenticated, async (req, res) => {
 });
 
 // Update profile (PUT method for updates)
-router.put('/', ensureAuthenticated, async (req, res) => {
+router.put('/', ensureAuthenticated, profileLimiter, async (req, res) => {
   try {
     const { zipCode, familyMembers } = req.body;
 

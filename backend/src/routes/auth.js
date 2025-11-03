@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('../config/passport');
+const { authLimiter } = require('../middleware/rateLimiter');
 
 // Google OAuth login
 router.get('/google', 
+  authLimiter,
   passport.authenticate('google', { 
     scope: ['profile', 'email'] 
   })
@@ -11,6 +13,7 @@ router.get('/google',
 
 // Google OAuth callback
 router.get('/google/callback',
+  authLimiter,
   passport.authenticate('google', { 
     failureRedirect: '/login-failed' 
   }),
